@@ -42,4 +42,3 @@ jobs:
           --stack-name ec2-almalinux-stack \
           --parameter-overrides KeyName=${{ secrets.AWS_KEY_PAIR_NAME }} \
           --capabilities CAPABILITY_NAMED_IAM
-          
