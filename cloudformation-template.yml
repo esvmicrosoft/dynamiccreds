@@ -17,7 +17,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceType
-      ImageId: ami-0a91cd140a1fc148a # Replace with the actual AlmaLinux AMI ID for your region
+      ImageId: ami-0481085d153c9a850 # Replace with the actual AlmaLinux AMI ID for your region
       KeyName: !Ref KeyName
       SecurityGroups:
         - !Ref InstanceSecurityGroup
