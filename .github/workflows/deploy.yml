@@ -31,8 +31,9 @@ jobs:
       run: |
        sleep 0
        set -x
-       if [ -n ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }} ]; then echo not empty; else  echo empty; fi
-       echo ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }} | base64 -w0; echo
+       echo '${{ toJson(steps.import-secrets.outputs.AWS_ACCESS_KEY_ID) }}' \| base64 -w0; echo
+
+#       if [ -n ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }} ]; then echo not empty; else  echo empty; fi
 
 #        echo "${{ toJson(steps.import-secrets.outputs) }}" >> secrets.json
 #        cat secrets.json
