@@ -17,8 +17,8 @@ jobs:
         tlsSkipVerify: true
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          /aws/creds/my-role  AWS_ACCESS_KEY_ID | AWS_ACCESS_KEY_ID;
-          /aws/creds/my-role  AWS_SECRET_ACCESS_KEY | AWS_SECRET_ACCESS_KEY
+          /aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID;
+          /aws/creds/my-role  secret_key | AWS_SECRET_ACCESS_KEY
   
   
   deploy:
@@ -27,7 +27,7 @@ jobs:
     steps:
     - name: Debug vault
       run: |
-        ACCESS_KEY_ID="${{ env.AWS_ACCESS_KEY_ID }}"
+        ACCESS_KEY_ID="${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}"
         SECRET_ACCESS_KEY="{{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}"
         echo "${{ toJson(steps.import-secrets.outputs) }}" >> secrets.json
         cat secrets.json
