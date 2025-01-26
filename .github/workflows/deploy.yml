@@ -25,7 +25,9 @@ jobs:
 
     steps:
     - name: Debug vault
-      run: set
+      run: |
+        echo "${{ env.AWS_ACCESS_KEY_ID }}" > myfile
+        cat myfile
 #      
 #    - name: Checkout repository
 #      uses: actions/checkout@v2
