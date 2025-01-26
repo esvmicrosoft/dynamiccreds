@@ -1,15 +1,14 @@
 name: Deploy EC2 Instance
 
-on:
-  push:
-    branches:
-      - main
+on: none
+# push:
+#    branches:
+#      - main
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v2
     - name: Import Secrets
       uses: hashicorp/vault-action@v3.1.0
       with:
@@ -17,8 +16,8 @@ jobs:
         tlsSkipVerify: true
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          path  secret
-
+          aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID;
+          aws/creds/my-role  secret_key | AWS_SECRET_ACCESS_KEY
   
   
   deploy:
