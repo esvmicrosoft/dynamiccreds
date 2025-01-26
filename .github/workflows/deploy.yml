@@ -19,8 +19,8 @@ jobs:
         token: ${{ secrets.MYGITHUB_TOKEN }}
         exportEnv: false
         secrets: |
-          /aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID ;
-          /aws/creds/my-role  secret_key | AWS_SECRET_ACCESS_KEY
+          /aws/creds/my-role  access_key ;
+          /aws/creds/my-role  secret_key 
   
 #  debug:
 #    runs-on: self-hosted
@@ -36,9 +36,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#    - name: Debug vault
-#      run: |
-#       sleep 0
+    - name: Debug vault
+      run: |
+       sleep 10
 #       set -x
 #       echo '${{ toJson(steps.import-secrets.outputs.AWS_ACCESS_KEY_ID) }}' \| base64 -w0; echo
 
@@ -55,8 +55,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ steps.import-secrets.outputs.access_key }}
+        aws-secret-access-key: ${{ steps.import-secrets.outputs.secret_key }}
         aws-region: us-east-1 # Replace with your desired AWS region
 
  #   - name: Deploy CloudFormation stack
