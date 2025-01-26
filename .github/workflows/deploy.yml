@@ -22,19 +22,20 @@ jobs:
           /aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID ;
           /aws/creds/my-role  secret_key | AWS_SECRET_ACCESS_KEY
   
-  debug:
-    runs-on: self-hosted
-    needs: build
-    steps:
-    - name: reveal secrets
-      id: reveal-secrets
-      run: |
-        logger '${{ toJson(steps.import-secrets.outputs) }}'
-        
-#  deploy:
-#    runs-on: ubuntu-latest
-#
+#  debug:
+#    runs-on: self-hosted
+#    needs: build
 #    steps:
+#    - name: reveal secrets
+#      id: reveal-secrets
+#      run: |
+#        logger '${{ toJson(steps.import-secrets.outputs) }}'
+        
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
 #    - name: Debug vault
 #      run: |
 #       sleep 0
@@ -51,12 +52,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-#    - name: Configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@v4
-#      with:
-#        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: us-east-1 # Replace with your desired AWS region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 # Replace with your desired AWS region
 
  #   - name: Deploy CloudFormation stack
  #     run: |
