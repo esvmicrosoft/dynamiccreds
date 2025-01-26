@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Debug vault
-      run: env | grep AWS
+      run: env
 #      
 #    - name: Checkout repository
 #      uses: actions/checkout@v2
