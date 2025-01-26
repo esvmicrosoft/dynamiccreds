@@ -28,7 +28,11 @@ jobs:
 
     steps:
     - name: Debug vault
-      run: sleep 10
+      run: s|
+       sleep 10
+       set -x
+       if [ -n \"${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}\" ]; then echo not empty; else  echo empty; fi
+
 #        echo "${{ toJson(steps.import-secrets.outputs) }}" >> secrets.json
 #        cat secrets.json
 #        ACCESS_KEY_ID="${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}"
@@ -37,12 +41,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1 # Replace with your desired AWS region
+#    - name: Configure AWS credentials
+#      uses: aws-actions/configure-aws-credentials@v4
+#      with:
+#        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}
+#        aws-secret-access-key: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
+#        aws-region: us-east-1 # Replace with your desired AWS region
 
  #   - name: Deploy CloudFormation stack
  #     run: |
