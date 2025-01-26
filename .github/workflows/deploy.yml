@@ -10,6 +10,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Import Secrets
+      id: import-secrets
       uses: hashicorp/vault-action@v3.1.0
       with:
         url: https://127.0.0.1:8200
@@ -24,10 +25,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#    - name: Debug vault
-#      run: |
-#        echo "${{ env.AWS_ACCESS_KEY_ID }}" > myfile
-#        cat myfile
+    - name: Debug vault
+      run: |
+        ACCESS_KEY_ID = "${{ env.AWS_ACCESS_KEY_ID }}"
+        SECRET_ACCESS_KEY = "{{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}"
+        echo '${{ toJson(steps.import-secrets.outputs) }}' >> secrets.json
+        cat secrets.json
       
     - name: Checkout repository
       uses: actions/checkout@v2
