@@ -28,7 +28,7 @@ jobs:
 
     steps:
     - name: Debug vault
-      run: s|
+      run: |
        sleep 10
        set -x
        if [ -n \"${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}\" ]; then echo not empty; else  echo empty; fi
