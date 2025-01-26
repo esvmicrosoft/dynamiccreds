@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - script: |
-      echo ${{ secrets.AWS_ACCESS_KEY_ID }}
+        echo ${ secrets.AWS_ACCESS_KEY_ID }
       
     - name: Checkout repository
       uses: actions/checkout@v2
