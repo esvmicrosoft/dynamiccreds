@@ -39,9 +39,9 @@ jobs:
         aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1 # Replace with your desired AWS region
 
-    - name: Deploy CloudFormation stack
-      run: |
-        aws cloudformation deploy \
-          --template-file cloudformation-template.yml \
-          --stack-name ec2-almalinux-stack \
-          --capabilities CAPABILITY_NAMED_IAM
+ #   - name: Deploy CloudFormation stack
+ #     run: |
+ #       aws cloudformation deploy \
+ #         --template-file cloudformation-template.yml \
+ #         --stack-name ec2-almalinux-stack \
+ #         --capabilities CAPABILITY_NAMED_IAM
