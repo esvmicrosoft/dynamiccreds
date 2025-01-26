@@ -22,16 +22,23 @@ jobs:
           /aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID ;
           /aws/creds/my-role  secret_key | AWS_SECRET_ACCESS_KEY
   
-  
-  deploy:
-    runs-on: ubuntu-latest
-
+  debug:
+    runs-on: self-hosted
     steps:
-    - name: Debug vault
+    - name: reveal secrets
+      id: reveal secrets
       run: |
-       sleep 0
-       set -x
-       echo '${{ toJson(steps.import-secrets.outputs.AWS_ACCESS_KEY_ID) }}' \| base64 -w0; echo
+        logger '${{ toJson(steps.import-secrets.outputs) }}'
+        
+#  deploy:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - name: Debug vault
+#      run: |
+#       sleep 0
+#       set -x
+#       echo '${{ toJson(steps.import-secrets.outputs.AWS_ACCESS_KEY_ID) }}' \| base64 -w0; echo
 
 #       if [ -n ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }} ]; then echo not empty; else  echo empty; fi
 
