@@ -15,7 +15,8 @@ jobs:
       with:
         url: https://127.0.0.1:8200
         tlsSkipVerify: true
-        token: ${{ secrets.VAULT_TOKEN }}
+#        token: ${{ secrets.VAULT_TOKEN }}
+#        token: ${{ secrets.MYGITHUB_TOKEN }}
         exportEnv: false
         secrets: |
           /aws/creds/my-role  access_key ;
