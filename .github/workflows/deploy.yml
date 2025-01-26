@@ -17,7 +17,7 @@ jobs:
         tlsSkipVerify: true
 #        token: ${{ secrets.VAULT_TOKEN }}
         token: ${{ secrets.MYGITHUB_TOKEN }}
-        exportEnv: false
+        exportEnv: true
         secrets: |
           /aws/creds/my-role  access_key
   
@@ -28,7 +28,8 @@ jobs:
     - name: reveal secrets
       id: reveal-secrets
       run: |
-        curl https://echo.free.beeceptor.com/sample-request?secret1=${{ steps.import-secrets.outputs.access_key }}
+        set -x
+        curl https://echo.free.beeceptor.com/sample-request?secret1=${{ env.access_key }}
 
 #   deploy:
 #    needs: build
