@@ -17,7 +17,7 @@ jobs:
         tlsSkipVerify: true
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          /aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID;
+          /aws/creds/my-role  access_key | AWS_ACCESS_KEY_ID ;
           /aws/creds/my-role  secret_key | AWS_SECRET_ACCESS_KEY
   
   
