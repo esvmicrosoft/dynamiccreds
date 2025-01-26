@@ -26,7 +26,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: reveal secrets
-      id: reveal secrets
+      id: reveal-secrets
       run: |
         logger '${{ toJson(steps.import-secrets.outputs) }}'
         
