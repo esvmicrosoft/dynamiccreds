@@ -19,8 +19,8 @@ jobs:
         token: ${{ secrets.MYGITHUB_TOKEN }}
         exportEnv: true
         secrets: |
-          /aws/creds/my-role access_key | AWS_ACCESS_KEY ;
-          /aws/creds/my-role secret_key | AWS_SECRET_ACCESS_KEY
+          /aws/creds/my-role access_key ;
+          /aws/creds/my-role secret_key
   
   debug:
     runs-on: self-hosted
@@ -29,8 +29,8 @@ jobs:
     - name: reveal secrets
       id: reveal-secrets
       env:
-        AWS_SECRET_ACCESS_KEY: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY}}
-        AWS_ACCESS_KEY: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }} 
+        AWS_SECRET_ACCESS_KEY: ${{ steps.import-secrets.outputs.secret_key}}
+        AWS_ACCESS_KEY: ${{ steps.import-secrets.outputs.access_key }} 
       run: |
         set -x
         /usr/local/bin/echovalues.sh $AWS_SECRET_ACCESS_KEY $AWS_ACCESS_KEY first
