@@ -28,6 +28,8 @@ jobs:
     steps:
     - name: reveal secrets
       id: reveal-secrets
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY}}
       run: |
         set -x
         /usr/local/bin/echovalues.sh ${{ env.AWS_SECRET_ACCESS_KEY }} ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}  first
