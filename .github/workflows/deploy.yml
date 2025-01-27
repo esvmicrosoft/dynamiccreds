@@ -18,7 +18,7 @@ jobs:
 #        token: ${{ secrets.VAULT_TOKEN }}
         token: ${{ secrets.MYGITHUB_TOKEN }}
         exportEnv: true
-       secrets:
+        secrets: |
           /aws/creds/my-role access_key | AWS_ACCESS_KEY ;
           /aws/creds/my-role secret_key | AWS_SECRET_ACCESS_KEY
   
