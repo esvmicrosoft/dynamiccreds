@@ -14,12 +14,13 @@ jobs:
       uses: hashicorp/vault-action@v2
       with:
         url: https://127.0.0.1:8200
-        token: ${{ secrets.MYGITHUB_TOKEN }}
+        token: ${{ secrets.STS_TOKEN }}
         caCertificate: ${{ secrets.VAULT_CERT }}
         exportEnv: true
         secrets: |
-          /aws/creds/my-role access_key | AWS_ACCESS_KEY_ID ;
-          /aws/creds/my-role secret_key | AWS_SECRET_ACCESS_KEY
+          /aws/sts/temp_user access_key | AWS_ACCESS_KEY_ID ;
+          /aws/sts/temp_user secret_key | AWS_SECRET_ACCESS_KEY ;
+          /aws/sts/temp_user session_token | AWS_SESSION_TOKEN
 
   debug:
     runs-on: self-hosted
@@ -44,8 +45,9 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: $AWS_KEY
-        aws-secret-access-key: $AWS_SECRET
+        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ steps.import-secrets.outputs.AWS_SESSION_TOKEN }}
         aws-region: us-east-1 # Replace with your desired AWS region
 
 # #   - name: Deploy CloudFormation stack
