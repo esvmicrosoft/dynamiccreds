@@ -11,11 +11,9 @@ jobs:
     steps:
     - name: Import Secrets
       id: import-secrets
-      uses: hashicorp/vault-action@v1.0.1
+      uses: hashicorp/vault-action@v2
       with:
         url: https://127.0.0.1:8200
-        tlsSkipVerify: false
-#        token: ${{ secrets.VAULT_TOKEN }}
         token: ${{ secrets.MYGITHUB_TOKEN }}
         caCertificate: ${{ secrets.VAULT_CERT }}
         exportEnv: true
