@@ -17,7 +17,7 @@ jobs:
         tlsSkipVerify: false
 #        token: ${{ secrets.VAULT_TOKEN }}
         token: ${{ secrets.MYGITHUB_TOKEN }}
-        caCertificate: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ0RENDQVZxZ0F3SUJBZ0lVWGY3SzdjSWNGaFBNcmpUT0dNbUJ4bDB4NGxnd0NnWUlLb1pJemowRUF3SXcKRnpFVk1CTUdBMVVFQXhNTVZtRjFiSFFnUkdWMklFTkJNQjRYRFRJMU1ERXlOakUyTVRVMU1Gb1hEVE0xTURFeQpOREUyTVRZMU1Gb3dGekVWTUJNR0ExVUVBeE1NVm1GMWJIUWdSR1YySUVOQk1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUU1bldPUURralFtMWkvZlo1Rkw1Y1NqTk9VNGF4TC9oY2Rwc3Y4NzBqZXVWTkViSlYKQS9XUnRUT042RWl6Q3g0S0hyS3V5Y3c0dXZYeG1TT3lFN0c0aGFPQmd6Q0JnREFPQmdOVkhROEJBZjhFQkFNQwpBZ1F3SFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CCkFmOHdIUVlEVlIwT0JCWUVGRWg3QkdVREQ0bDVRV2M0dmhjRE85enpxT2xiTUI4R0ExVWRJd1FZTUJhQUZFaDcKQkdVREQ0bDVRV2M0dmhjRE85enpxT2xiTUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSUU1MWI1bTVZSi83UDU3RwpOd3J3VGtUdmh1ME55bTA1bkdtQjNwVmU1VFI3QWlFQWlabGF3U3VHdTM4TEZTVUhtRUJmR0lTblBKdTVmLzBSClRiaDU0RDhUdGtzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        caCertificate: ${{ secrets.VAULT_CERT }}
         exportEnv: true
         secrets: |
           /aws/creds/my-role access_key | AWS_ACCESS_KEY_ID ;
@@ -33,10 +33,7 @@ jobs:
         set -x
         env > /tmp/env.log
         set > /tmp/set.log
-        echo '${{ toJson(needs.build.outputs) }}' > /tmp/needs_build.log
-        echo '${{ toJson(needs.import-secrets.outputs) }}' > /tmp/needs_import-secrets.log
-        echo '${{ toJson(steps.build.outputs) }}' > /tmp/steps_build.log
-        echo '${{ toJson(steps.import-secrets.outputs) }}' > /tmp/steps_import-secrets.log
+        echo ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY_ID }} > /tmp/steps_import-secrets.log
 
 
 #  deploy:
