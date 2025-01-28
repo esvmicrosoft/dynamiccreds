@@ -14,7 +14,7 @@ jobs:
       uses: hashicorp/vault-action@v2
       with:
         url: https://127.0.0.1:8200
-        token: ${{ secrets.STS_TOKEN }}
+        token: ${{ secrets.STS_SECRET }}
         caCertificate: ${{ secrets.VAULT_CERT }}
         exportEnv: true
         secrets: |
