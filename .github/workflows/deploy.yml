@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Import Secrets
       id: import-secrets
-      uses: hashicorp/vault-action@v3.1.0
+      uses: hashicorp/vault-action@v1.0.1
       with:
         url: https://127.0.0.1:8200
         tlsSkipVerify: false
@@ -20,7 +20,8 @@ jobs:
         caCertificate: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ0RENDQVZxZ0F3SUJBZ0lVWGY3SzdjSWNGaFBNcmpUT0dNbUJ4bDB4NGxnd0NnWUlLb1pJemowRUF3SXcKRnpFVk1CTUdBMVVFQXhNTVZtRjFiSFFnUkdWMklFTkJNQjRYRFRJMU1ERXlOakUyTVRVMU1Gb1hEVE0xTURFeQpOREUyTVRZMU1Gb3dGekVWTUJNR0ExVUVBeE1NVm1GMWJIUWdSR1YySUVOQk1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUU1bldPUURralFtMWkvZlo1Rkw1Y1NqTk9VNGF4TC9oY2Rwc3Y4NzBqZXVWTkViSlYKQS9XUnRUT042RWl6Q3g0S0hyS3V5Y3c0dXZYeG1TT3lFN0c0aGFPQmd6Q0JnREFPQmdOVkhROEJBZjhFQkFNQwpBZ1F3SFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CCkFmOHdIUVlEVlIwT0JCWUVGRWg3QkdVREQ0bDVRV2M0dmhjRE85enpxT2xiTUI4R0ExVWRJd1FZTUJhQUZFaDcKQkdVREQ0bDVRV2M0dmhjRE85enpxT2xiTUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSUU1MWI1bTVZSi83UDU3RwpOd3J3VGtUdmh1ME55bTA1bkdtQjNwVmU1VFI3QWlFQWlabGF3U3VHdTM4TEZTVUhtRUJmR0lTblBKdTVmLzBSClRiaDU0RDhUdGtzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
         exportEnv: true
         secrets: |
-          /aws/creds/my-role * | dyn_ ;
+          /aws/creds/my-role access_key | AWS_ACCESS_KEY_ID ;
+          /aws/creds/my-role secret_key | AWS_SECRET_ACCESS_KEY
 
   debug:
     runs-on: self-hosted
@@ -38,23 +39,23 @@ jobs:
         echo '${{ toJson(steps.import-secrets.outputs) }}' > /tmp/steps_import-secrets.log
 
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@v2
+#
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: $AWS_KEY
         aws-secret-access-key: $AWS_SECRET
         aws-region: us-east-1 # Replace with your desired AWS region
 
- #   - name: Deploy CloudFormation stack
- #     run: |
- #       aws cloudformation deploy \
- #         --template-file cloudformation-template.yml \
- #         --stack-name ec2-almalinux-stack \
- #         --capabilities CAPABILITY_NAMED_IAM
+# #   - name: Deploy CloudFormation stack
+# #     run: |
+# #       aws cloudformation deploy \
+# #         --template-file cloudformation-template.yml \
+# #         --stack-name ec2-almalinux-stack \
+# #         --capabilities CAPABILITY_NAMED_IAM
