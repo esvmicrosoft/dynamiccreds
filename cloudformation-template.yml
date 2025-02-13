@@ -1,59 +1,40 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: Template to deploy a t2.micro instance running AlmaLinux
-
-Parameters:
-  InstanceType:
-    Description: EC2 instance type
-    Type: String
-    Default: t2.micro
-    AllowedValues:
-      - t2.micro
-      - t2.small
-      - t2.medium
-    ConstraintDescription: must be a valid EC2 instance type.
-
+---
+# Step 1: Create a Security Group
 Resources:
-  AlmaLinuxOS9SecurityGroup:
-   Type: AWS::EC2::SecurityGroup
-     Properties:
-       GroupName: AlmaLinux OS 9 (x86_64)-9.5.20241122-AutogenByAWSMP--2
-       GroupDescription: AlmaLinux OS 9 (x86_64)-9.5.20241122-AutogenByAWSMP--2 created 2025-01-26T05:55:58.941Z
-       VpcId: vpc-09946880355d5b528
-       SecurityGroupIngress:
-         - IpProtocol: tcp
-           FromPort: 22
-           ToPort: 22
-           CidrIp: 97.75.140.234/32
+  LaunchWizard1SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: launch-wizard-1
+      GroupDescription: launch-wizard-1 created 2025-02-13T13:44:35.210Z
+      VpcId: vpc-0cd4fcae4898bde1e
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 97.75.140.234/32
 
-  AlmaLinuxOS9Instance:
+# Step 2: Create an EC2 Instance
+  Alma8newInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0481085d153c9a850
-      InstanceType: t2.micro
-      KeyName: alma9aws
-      BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            Encrypted: false
-            DeleteOnTermination: true
-            Iops: 3000
-            SnapshotId: snap-0309d280009562b48
-            VolumeSize: 4
-            VolumeType: gp3
-            Throughput: 125
+      ImageId: ami-085ad6ae776d8f09c
+      InstanceType: t3.small
+      KeyName: almaaws
       NetworkInterfaces:
         - AssociatePublicIpAddress: true
           DeviceIndex: 0
           GroupSet:
-            - !Ref AlmaLinuxOS9SecurityGroup
+            - !Ref LaunchWizard1SecurityGroup
       CreditSpecification:
-        CPUCredits: standard
+        CPUCredits: unlimited
+      Tags:
+        - Key: Name
+          Value: alma8new
+      MetadataOptions:
+        HttpEndpoint: enabled
+        HttpPutResponseHopLimit: 2
+        HttpTokens: required
       PrivateDnsNameOptions:
         HostnameType: ip-name
         EnableResourceNameDnsARecord: true
         EnableResourceNameDnsAAAARecord: false
-
-Outputs:
-  InstanceId:
-    Description: The Instance ID
-    Value: !Ref AlmaLinuxOS9Instance
