@@ -12,7 +12,7 @@ jobs:
       - name: Deploy CloudFormation stack
         uses: aws-actions/configure-aws-credentials@master
         with:
-          role-to-assume: ${{ secrets.AWS_OIDC }}
+          role-to-assume: arn:aws:iam::343218193807:oidc-provider/token.actions.githubusercontent.com
           aws-region: us-east-1
 
       - name: Deploy CloudFormation stack
