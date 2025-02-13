@@ -16,7 +16,7 @@ jobs:
       - name: Deploy CloudFormation stack
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
-          role-to-assume: arn:aws:iam::343218193807:role/newoidc_role
+          role-to-assume: arn:aws:iam::343218193807:role/newer_oidc_role
           aws-region: us-east-1
 
       - name: Deploy CloudFormation stack
