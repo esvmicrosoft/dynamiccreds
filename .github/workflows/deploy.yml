@@ -1,9 +1,5 @@
 name: Deploy EC2 Instance
 
-on: None
-#  push:
-#    branches:
-#      - main
 
 jobs:
   build:
