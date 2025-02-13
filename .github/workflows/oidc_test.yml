@@ -13,6 +13,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: ${{ secrets.AWS_OIDC }}
+          aws-region: us-east-1
 
       - name: Deploy CloudFormation stack
         run: |
