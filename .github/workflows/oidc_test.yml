@@ -21,3 +21,6 @@ jobs:
             --template-file cloudformation-template.yml \
             --stack-name ec2-almalinux-stack \
             --capabilities CAPABILITY_NAMED_IAM
+
+
+          
