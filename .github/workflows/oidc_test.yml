@@ -8,7 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-      - name: Configure AWS credentials
+    steps:
+      - name: Deploy CloudFormation stack
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: ${{ secrets.AWS_OIDC }}
