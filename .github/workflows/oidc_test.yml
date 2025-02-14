@@ -16,7 +16,7 @@ jobs:
       - name: AWS Login
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
-          role-to-assume: arn:aws:iam::343218193807:role/newer_oidc_role
+          role-to-assume: ${{ secrets.AWS_OIDC }}
           aws-region: us-east-1
 
       - name: Azure Login
