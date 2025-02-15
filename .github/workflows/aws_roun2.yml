@@ -42,8 +42,8 @@ jobs:
 
 #        echo "${{ toJson(steps.import-secrets.outputs) }}" >> secrets.json
 #        cat secrets.json
-#        ACCESS_KEY_ID="${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}"
-#        SECRET_ACCESS_KEY="{{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }}"
+#        ACCESS_KEY_ID="${{ env.AWS_ACCESS_KEY }}"
+#        SECRET_ACCESS_KEY="{{ env.AWS_SECRET_ACCESS_KEY }}"
       
 #    - name: Checkout repository
 #      uses: actions/checkout@v2
