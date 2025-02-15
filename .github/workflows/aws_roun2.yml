@@ -54,11 +54,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v4.1.0
       with:
-        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ steps.import-secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1 # Replace with your desired AWS region
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 
+        
+#        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}
+#        aws-secret-access-key: ${{ steps.import-secrets.AWS_SECRET_ACCESS_KEY }}
+#        aws-region: us-east-1 # Replace with your desired AWS region
+
+
 
  #   - name: Deploy CloudFormation stack
  #     run: |
