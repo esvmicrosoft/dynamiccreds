@@ -55,7 +55,17 @@ jobs:
         aws-access-key-id: ${{ needs.aws-import-secrets.outputs.AWS_KEY }}
         aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.AWS_SECRET }}
         aws-region: us-east-1 
-
+        
+  deploy-azure:
+    needs: azure-import-secrets
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      uses: azure/login@v2.2.0
+      with:
+        client-id:  ${{ needs.aws-import-secrets.outputs.AZURE_CLIENT_ID }}
+        tenant-id: ${{ needs.aws-import-secrets.outputs.AZURE_TENANT_ID }}
+        subscription-id: ${{ needs.azure-import-secrets.outputs.AZURE_SUBSCRIPTION_ID }}
 
 
 
