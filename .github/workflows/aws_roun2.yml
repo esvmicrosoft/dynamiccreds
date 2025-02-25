@@ -1,4 +1,4 @@
-hname: Deploy EC2 Instance
+name: Deploy EC2 Instance
 
 on: 
   push:
