@@ -59,8 +59,10 @@ jobs:
         export VAULT_ADDR="https://127.0.0.1:8200"
         export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
         export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
+        echo $AZURE_INFO
         az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
         az_client_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret"| gpg --symmetric --batch --passphrase ${{ secrets.PASSPHRASE }} --output - | base64 -w0)
+        echo $az_client_secret
         echo "CLIENT_ID=$az_client_id" >> "$GITHUB_OUTPUT"
         echo "CLIENT_SECRET=$az_client_secret" >> "$GITHUB_OUTPUT"
       shell: bash
