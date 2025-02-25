@@ -3,7 +3,7 @@ name: Deploy EC2 Instance
 on: 
   push:
     branches:
-      - master
+      - main
   
 permissions:
   id-token: write
@@ -69,10 +69,7 @@ jobs:
         aws-access-key-id: ${{ steps.aws-import-secrets.outputs.aws_key }}
         aws-secret-access-key: ${{ steps.aws-import-secrets.outputs.aws_secret }}
         aws-region: us-east-1 
-        
-#        aws-access-key-id: ${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}
-#        aws-secret-access-key: ${{ steps.import-secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: us-east-1 # Replace with your desired AWS region
+
 
 
 
