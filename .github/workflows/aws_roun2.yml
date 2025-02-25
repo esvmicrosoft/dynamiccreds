@@ -1,4 +1,4 @@
-name: Deploy EC2 Instance
+hname: Deploy EC2 Instance
 
 on: 
   push:
@@ -11,17 +11,21 @@ permissions:
 
 jobs:
 
-  build:
+  aws-import-secrets:
     runs-on: self-hosted
+    outputs:
+      AWS_KEY: ${{ steps.step1.outputs.AWS_KEY }}
+      AWS_SECRET: ${{ steps.step1.outputs.AWS_SECRET }}
     steps:
     - name: AWS inline credentials
-      id: aws-import-secrets
       run: |
         export VAULT_ADDR="https://127.0.0.1:8200"
         export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
         export AWS_INFO=$(VAULT_TOKEN=${{ secrets.AWS_TOKEN }} vault read aws/creds/aws_short_lived -format=json)
-        export aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
-        export aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key") 
+        aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
+        aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key")
+        echo "AWS_KEY=$aws_key" >> $GITHUB_ENV
+        echo "AWS_SECRET"=$aws_secret" >> $GITHUB_ENV
       shell: bash
 
 
@@ -35,39 +39,15 @@ jobs:
 #        export az_clien_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret") 
 #      shell: bash
 
-
-  
-#   deploy:
-#    needs: build
-#    runs-on: ubuntu-latest
-
-#    steps:
-#    - name: Debug vault
-#      run: |
-#       sleep 10
-#       set -x
-#       echo '${{ steps.import-secrets.outputs.AWS_ACCESS_KEY }}' \| base64 -w0; echo
-
-#       if [ -n ${{ steps.import-secrets.outputs.AWS_SECRET_ACCESS_KEY }} ]; then echo not empty; else  echo empty; fi
-
-#        echo "${{ toJson(steps.import-secrets.outputs) }}" >> secrets.json
-#        cat secrets.json
-#        ACCESS_KEY_ID="${{ env.AWS_ACCESS_KEY }}"
-#        SECRET_ACCESS_KEY="{{ env.AWS_SECRET_ACCESS_KEY }}"
-      
-#    - name: Checkout repository
-#      uses: actions/checkout@v2
-#
-
   deploy:
-    needs: build
+    needs: aws-import-secrets
     runs-on: ubuntu-latest
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4.1.0
       with:
-        aws-access-key-id: ${{ steps.aws-import-secrets.outputs.aws_key }}
-        aws-secret-access-key: ${{ steps.aws-import-secrets.outputs.aws_secret }}
+        aws-access-key-id: ${{ neews.aws-import-secrets.outputs.aws_key }}
+        aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.aws_secret }}
         aws-region: us-east-1 
 
 
