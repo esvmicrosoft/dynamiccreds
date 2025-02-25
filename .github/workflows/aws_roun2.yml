@@ -29,7 +29,12 @@ jobs:
         echo "AWS_SECRET=$aws_secret" >> "$GITHUB_OUTPUT"
       shell: bash
 
-
+  azure-import-secrets:
+    runs-on: self-hosted
+    outputs:
+      CLIENT_ID: ${{ steps.aws.outputs.AWS_KEY }}
+      CLIENT_SECRET: ${{ steps.aws.outputs.AWS_SECRET }}
+    steps:
     - name: AZURE inline credentials
       id: azure
       run: | 
