@@ -61,7 +61,7 @@ jobs:
         export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
         az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
         az_client_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret")
-        echo "CLIENT_ID=$az_client_id" >> "$GITHUG_OUTPUT"
+        echo "CLIENT_ID=$az_client_id" >> "$GITHB_OUTPUT"
         echo "CLIENT_SECRET=$az_client_secret" >> "$GITHUB_OUTPUT"
       shell: bash
 
