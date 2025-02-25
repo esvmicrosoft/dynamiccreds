@@ -46,7 +46,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4.1.0
       with:
-        aws-access-key-id: ${{ neews.aws-import-secrets.outputs.aws_key }}
+        aws-access-key-id: ${{ needs.aws-import-secrets.outputs.aws_key }}
         aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.aws_secret }}
         aws-region: us-east-1 
 
