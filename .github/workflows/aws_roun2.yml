@@ -14,10 +14,11 @@ jobs:
   aws-import-secrets:
     runs-on: self-hosted
     outputs:
-      AWS_KEY: ${{ steps.step1.outputs.AWS_KEY }}
-      AWS_SECRET: ${{ steps.step1.outputs.AWS_SECRET }}
+      AWS_KEY: ${{ steps.aws.outputs.AWS_KEY }}
+      AWS_SECRET: ${{ steps.aws.outputs.AWS_SECRET }}
     steps:
     - name: AWS inline credentials
+      id: aws
       run: |
         export VAULT_ADDR="https://127.0.0.1:8200"
         export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
