@@ -25,7 +25,7 @@ jobs:
         aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
         aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key")
         echo "AWS_KEY=$aws_key" >> $GITHUB_ENV
-        echo "AWS_SECRET"=$aws_secret" >> $GITHUB_ENV
+        echo "AWS_SECRET=$aws_secret" >> $GITHUB_ENV
       shell: bash
 
 
