@@ -3,7 +3,7 @@ name: Deploy EC2 Instance
 on: 
   push:
     branches:
-      - master
+      - main
   
 permissions:
   id-token: write
@@ -11,34 +11,34 @@ permissions:
 
 jobs:
 
-  aws-import-secrets:
-    runs-on: self-hosted
-    outputs:
-      AWS_KEY: ${{ steps.aws.outputs.AWS_KEY }}
-      AWS_SECRET: ${{ steps.aws.outputs.AWS_SECRET }}
-    steps:
-    - name: AWS inline credentials
-      id: aws
-      run: |
-        export VAULT_ADDR="https://127.0.0.1:8200"
-        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
-        export AWS_INFO=$(VAULT_TOKEN=${{ secrets.AWS_TOKEN }} vault read aws/creds/aws_short_lived -format=json)
-        aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
-        aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key")
-        echo "AWS_KEY=$aws_key" >> "$GITHUB_OUTPUT"
-        echo "AWS_SECRET=$aws_secret" >> "$GITHUB_OUTPUT"
-      shell: bash
-
-  deploy-aws:
-    needs: aws-import-secrets
-    runs-on: ubuntu-latest
-    steps:
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4.1.0
-      with:
-        aws-access-key-id: ${{ needs.aws-import-secrets.outputs.AWS_KEY }}
-        aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.AWS_SECRET }}
-        aws-region: us-east-1 
+###  aws-import-secrets:
+###    runs-on: self-hosted
+###    outputs:
+###      AWS_KEY: ${{ steps.aws.outputs.AWS_KEY }}
+###      AWS_SECRET: ${{ steps.aws.outputs.AWS_SECRET }}
+###    steps:
+###    - name: AWS inline credentials
+###      id: aws
+###      run: |
+###        export VAULT_ADDR="https://127.0.0.1:8200"
+###        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
+###        export AWS_INFO=$(VAULT_TOKEN=${{ secrets.AWS_TOKEN }} vault read aws/creds/aws_short_lived -format=json)
+###        aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
+###        aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key")
+###        echo "AWS_KEY=$aws_key" >> "$GITHUB_OUTPUT"
+###        echo "AWS_SECRET=$aws_secret" >> "$GITHUB_OUTPUT"
+###      shell: bash
+###
+###  deploy-aws:
+###    needs: aws-import-secrets
+###    runs-on: ubuntu-latest
+###    steps:
+###    - name: Configure AWS credentials
+###      uses: aws-actions/configure-aws-credentials@v4.1.0
+###      with:
+###        aws-access-key-id: ${{ needs.aws-import-secrets.outputs.AWS_KEY }}
+###        aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.AWS_SECRET }}
+###        aws-region: us-east-1 
 
  #   - name: Deploy CloudFormation stack
  #     run: |
@@ -71,11 +71,11 @@ jobs:
     steps:
     - name: decript Azure Secret
       run: |
-        mysecret=$(base64 --decode <(echo ${{ needs.azure-import-secrets.outputs.CLIENT_SECRET }}) | gpg --decrypt --quiet --batch --passphrase ${{ secrets.PASSPHRASE }} --output -) 
+        echo "client_secret=$(echo ${{ needs.azure-import-secrets.outputs.CLIENT_SECRET }}| base64 -d | gpg --decrypt --quiet --batch --passphrase ${{ secrets.PASSPHRASE }} --output -)"  >> "$GITHUB_ENV"
     - name: Azure Login
       uses: azure/login@v2.2.0
       with:
-        creds: '{ "clientId":"${{ needs.azure-import-secrets.outputs.CLIENT_ID }}","clientSecret":"${{ needs.azure-import-secrets.outputs.CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+        creds: '{ "clientId":"${{ needs.azure-import-secrets.outputs.CLIENT_ID }}","clientSecret":"$client_secret","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
 
 
 
