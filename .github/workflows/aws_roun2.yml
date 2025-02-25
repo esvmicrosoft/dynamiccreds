@@ -24,8 +24,8 @@ jobs:
         export AWS_INFO=$(VAULT_TOKEN=${{ secrets.AWS_TOKEN }} vault read aws/creds/aws_short_lived -format=json)
         aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
         aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key")
-        echo "AWS_KEY=$aws_key" >> $GITHUB_ENV
-        echo "AWS_SECRET=$aws_secret" >> $GITHUB_ENV
+        echo "AWS_KEY=$aws_key" >> "$GITHUB_OUTPUT"
+        echo "AWS_SECRET=$aws_secret" >> "$GITHUB_OUTPUT"
       shell: bash
 
 
