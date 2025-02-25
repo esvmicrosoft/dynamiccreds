@@ -60,7 +60,7 @@ jobs:
         export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
         export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
         az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
-        az_client_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret")
+        az_client_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret"| gpg --symmetric --batch --passphrase ${{ secrets.PASSPHRASE }} --output - | base64 -w0)
         echo "CLIENT_ID=$az_client_id" >> "$GITHUB_OUTPUT"
         echo "CLIENT_SECRET=$az_client_secret" >> "$GITHUB_OUTPUT"
       shell: bash
@@ -69,6 +69,9 @@ jobs:
     needs: azure-import-secrets
     runs-on: ubuntu-latest
     steps:
+    - name: decript Azure Secret
+      run: |
+        mysecret=$(base64 --decode <(echo ${{ needs.azure-import-secrets.outputs.CLIENT_SECRET }}) | gpg --decrypt --quiet --batch --passphrase ${{ secrets.PASSPHRASE }} --output -) 
     - name: Azure Login
       uses: azure/login@v2.2.0
       with:
