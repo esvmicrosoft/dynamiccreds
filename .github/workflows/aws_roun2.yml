@@ -3,7 +3,7 @@ name: Deploy EC2 Instance
 on: 
   push:
     branches:
-      - master
+      - main
   
 permissions:
   id-token: write
@@ -29,22 +29,6 @@ jobs:
         echo "AWS_SECRET=$aws_secret" >> "$GITHUB_OUTPUT"
       shell: bash
 
-  azure-import-secrets:
-    runs-on: self-hosted
-    outputs:
-      CLIENT_ID: ${{ steps.aws.outputs.AWS_KEY }}
-      CLIENT_SECRET: ${{ steps.aws.outputs.AWS_SECRET }}
-    steps:
-    - name: AZURE inline credentials
-      id: azure
-      run: | 
-        export VAULT_ADDR="https://127.0.0.1:8200"
-        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
-        export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
-        export az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
-        export az_clien_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret") 
-      shell: bash
-
   deploy-aws:
     needs: aws-import-secrets
     runs-on: ubuntu-latest
@@ -55,19 +39,6 @@ jobs:
         aws-access-key-id: ${{ needs.aws-import-secrets.outputs.AWS_KEY }}
         aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.AWS_SECRET }}
         aws-region: us-east-1 
-        
-  deploy-azure:
-    needs: azure-import-secrets
-    runs-on: ubuntu-latest
-    steps:
-    - name: Azure Login
-      uses: azure/login@v2.2.0
-      with:
-        client-id:  ${{ needs.aws-import-secrets.outputs.AZURE_CLIENT_ID }}
-        tenant-id: ${{ needs.aws-import-secrets.outputs.AZURE_TENANT_ID }}
-        subscription-id: ${{ needs.azure-import-secrets.outputs.AZURE_SUBSCRIPTION_ID }}
-
-
 
  #   - name: Deploy CloudFormation stack
  #     run: |
@@ -75,3 +46,33 @@ jobs:
  #         --template-file cloudformation-template.yml \
  #         --stack-name ec2-almalinux-stack \
  #         --capabilities CAPABILITY_NAMED_IAM
+
+  azure-import-secrets:
+    runs-on: self-hosted
+    outputs:
+      CLIENT_ID: ${{ steps.azure.outputs.CLIENT_ID }}
+      CLIENT_SECRET: ${{ steps.azure.outputs.CLIENT_SECRET }}
+    steps:
+    - name: AZURE inline credentials
+      id: azure
+      run: | 
+        export VAULT_ADDR="https://127.0.0.1:8200"
+        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
+        export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
+        az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
+        az_client_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret")
+        echo "CLIENT_ID=$az_client_id" >> "$GITHUG_OUTPUT"
+        echo "CLIENT_SECRET=$az_client_secret" >> "$GITHUB_OUTPUT"
+      shell: bash
+
+  deploy-azure:
+    needs: azure-import-secrets
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      uses: azure/login@v2.2.0
+      with:
+        creds: '{ "clientId":"${{ needs.azure-import-secrets.outputs.CLIENT_ID }}","clientSecret":"${{ needs.azure-import-secrets.outputs.CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+
+
