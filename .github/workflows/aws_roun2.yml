@@ -25,15 +25,15 @@ jobs:
       shell: bash
 
 
-    - name: AZURE inline credentials
-      id: azure-import-secrets
-      run: | 
-        export VAULT_ADDR="https://127.0.0.1:8200"
-        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
-        export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
-        export az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
-        export az_clien_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret") 
-      shell: bash
+#    - name: AZURE inline credentials
+#      id: azure-import-secrets
+#      run: | 
+#        export VAULT_ADDR="https://127.0.0.1:8200"
+#        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
+#        export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read azure/creds/azure_short_lived -format=json)
+#        export az_client_id=$(echo $AZURE_INFO | jq -r ".data.client_id")
+#        export az_clien_secret=$(echo $AZURE_INFO | jq -r ".data.client_secret") 
+#      shell: bash
 
 
   
