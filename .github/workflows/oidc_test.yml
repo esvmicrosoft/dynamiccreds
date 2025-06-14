@@ -3,7 +3,7 @@ name: Deploy EC2 Instance
 on:
   push:
     branches:
-      - master
+      - main
 
 
 permissions:
