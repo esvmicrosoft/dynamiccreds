@@ -1,0 +1,93 @@
+name: Deploy EC2 Instance
+
+on: 
+  push:
+    branches:
+      - main
+  
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+
+###  aws-import-secrets:
+###    runs-on: self-hosted
+###    outputs:
+###      AWS_KEY: ${{ steps.aws.outputs.AWS_KEY }}
+###      AWS_SECRET: ${{ steps.aws.outputs.AWS_SECRET }}
+###    steps:
+###    - name: AWS inline credentials
+###      id: aws
+###      run: |
+###        export VAULT_ADDR="https://127.0.0.1:8200"
+###        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
+###        export AWS_INFO=$(VAULT_TOKEN=${{ secrets.AWS_TOKEN }} vault read -format=json aws/creds/aws_short_lived )
+###        aws_key=$(echo $AWS_INFO | jq -r ".data.access_key")
+###        aws_secret=$(echo $AWS_INFO | jq -r ".data.secret_key")
+###        echo "AWS_KEY=$aws_key" >> "$GITHUB_OUTPUT"
+###        echo "AWS_SECRET=$aws_secret" >> "$GITHUB_OUTPUT"
+###      shell: bash
+###
+###  deploy-aws:
+###    needs: aws-import-secrets
+###    runs-on: ubuntu-latest
+###    steps:
+###    - name: Configure AWS credentials
+###      uses: aws-actions/configure-aws-credentials@v4.1.0
+###      with:
+###        aws-access-key-id: ${{ needs.aws-import-secrets.outputs.AWS_KEY }}
+###        aws-secret-access-key: ${{ needs.aws-import-secrets.outputs.AWS_SECRET }}
+###        aws-region: us-east-1 
+
+ #   - name: Deploy CloudFormation stack
+ #     run: |
+ #       aws cloudformation deploy \
+ #         --template-file cloudformation-template.yml \
+ #         --stack-name ec2-almalinux-stack \
+ #         --capabilities CAPABILITY_NAMED_IAM
+
+  azure-import-secrets:
+    runs-on: self-hosted
+    steps:      
+    - name: AZURE inline credentials
+      id: azure
+      run: | 
+        export VAULT_ADDR="https://127.0.0.1:8200"
+        export VAULT_CACERT="/tmp/vault-tls2535058764/vault-ca.pem"
+        export AZURE_INFO=$(VAULT_TOKEN=${{ secrets.AZURE_TOKEN }} vault read -format=json azure/creds/azure_short_lived)
+        echo $AZURE_INFO &> /tmp/azureinfo.log 
+        cat /tmp/azureinfo.log
+        echo "CLIENT_ID=$(echo $AZURE_INFO | jq -r '.data.client_id')" >> "$GITHUB_ENV"
+        echo "CLIENT_SEC=$(echo $AZURE_INFO | jq -r '.data.client_secret')" >> "$GITHUB_ENV"
+        echo $GITHUB_OUTPUTS
+      shell: bash
+    
+    - name: prepare vars
+      id: prepare_vars
+      run: |
+        echo "clientId=$CLIENT_ID" >> "$GITHUB_OUTPUT"  
+        echo "clientSecret=$CLIENT_SEC" >> "$GITHUB_OUTPUT"
+        echo "subscriptionId=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> "$GITHUB_OUTPUT"  
+        echo "tenantId=${{ secrets.AZURE_TENANT_ID }}" >> "$GITHUB_OUTPUT"  
+      shell: bash
+ 
+    - name: echo vars
+      run: |
+        echo "${{ toJSON(steps.prepare_vars.outputs) }}"  > /tmp/newfile
+      shell: bash
+      
+    - name: Azure Login
+      uses: azure/login@v2.2.0
+      with:
+        creds: "${{ toJSON(steps.prepare_vars.outputs) }}"
+        auth-type: "SERVICE_PRINCIPAL"
+        allow-no-subscriptions: true
+        
+
+    - name: Azure CLI script
+      uses: azure/cli@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az account show
