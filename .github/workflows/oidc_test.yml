@@ -32,4 +32,4 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az account show
+            az group list -o table | grep -v Default| sort
