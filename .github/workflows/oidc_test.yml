@@ -33,3 +33,19 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az group list -o table | grep -v Default| sort
+
+
+      - name: Azure Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id:  ${{ secrets.FDPO_CLIENT_ID }}
+          tenant-id: ${{ secrets.FDPO_TENANT_ID }}
+          subscription-id: ${{ secrets.FDPO_SUBSCRIPTION_ID }}
+
+          
+      - name: Azure CLI script
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az group list -o table | grep -v Default| sort
